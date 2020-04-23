@@ -47,7 +47,7 @@ ngrok http 56733
 ```
 ![](img/ngrok.png)
 
-####Do not close this terminal window, since the app needs it to redirect webhooks to your localhost.
+#### Do not close this terminal window, since the app needs it to redirect webhooks to your localhost.
 
 **Сopy and paste url in file [app/views.py](app/views.py) variable `webhookUrl`**
 

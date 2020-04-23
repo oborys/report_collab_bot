@@ -22,7 +22,7 @@ For which purpose you can use it:
 
 ```
 git clone https://github.com/oborys/report_collab_bot
-cd sport_report_collab
+cd report_collab_bot
 ```
 **2. Open files [app/views.py](app/views.py) and [Dockerfile](Dockerfile)**
 
@@ -41,11 +41,13 @@ Copy Bot's Access Token
 For sent information to your server/localhost, create [Webhook](https://developer.cisco.com/learning/tracks/devnet-express-cloud-collab-it-pro/creating-spark-bots-itp/collab-spark-botl-itp/step/4)
 
 For testing on localhost, you can use [ngrok](https://ngrok.com/download)
-After installing it open new terminal window and run the command
+After installing ngrok open **new terminal window** and run the command
 ```
 ngrok http 56733
 ```
 ![](img/ngrok.png)
+
+####Do not close this terminal window, since the app needs it to redirect webhooks to your localhost.
 
 **Сopy and paste url in file [app/views.py](app/views.py) variable `webhookUrl`**
 

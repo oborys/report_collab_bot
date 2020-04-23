@@ -16,83 +16,75 @@ For which purpose you can use it:
 - [Python](https://www.python.org/downloads/)
 - [Docker](https://www.docker.com/get-started)
 
-### Clone and open project
+### Installation
+
+**1. Clone and open project**
 
 ```
 git clone https://github.com/oborys/report_collab_bot
 cd sport_report_collab
 ```
-Open files `app/views.py` and `Dockerfile`
+**2. Open files [app/views.py](app/views.py) and [Dockerfile](Dockerfile)**
 
-### Create Webex bot and Webhook
+**3. Create a Webex bot and Webhook**
 
 Create Webex Bot:
 - [Sign-up](https://www.webex.com/pricing/free-trial.html) or [Sign-in](https://teams.webex.com/signin) in Webex Teams
-- Go to [https://developer.webex.com/](https://developer.webex.com/), then click [My Apps](https://developer.webex.com/my-apps) and Create a New App (Bot)
+- Go to [https://developer.webex.com/](https://developer.webex.com/), then click [My Apps](https://developer.webex.com/my-apps) and click Create a Bot
 
 Copy Bot's Access Token
 ![](img/App_Bot_Token.png)
 
-**Paste it into the file `views.py` variable `bearer`**
+**Paste it into the file [app/views.py](app/views.py) variable `bearer`**
 
 
-For sent information to your server, create [Webhook](https://developer.cisco.com/learning/tracks/devnet-express-cloud-collab-it-pro/creating-spark-bots-itp/collab-spark-botl-itp/step/4)
+For sent information to your server/localhost, create [Webhook](https://developer.cisco.com/learning/tracks/devnet-express-cloud-collab-it-pro/creating-spark-bots-itp/collab-spark-botl-itp/step/4)
+
 For testing on localhost, you can use [ngrok](https://ngrok.com/download)
-After installing run command
+After installing it open new terminal window and run the command
 ```
 ngrok http 56733
 ```
 ![](img/ngrok.png)
 
-**Сopy and paste url in file `views.py` variable `webhookUrl`**
+**Сopy and paste url in file [app/views.py](app/views.py) variable `webhookUrl`**
 
+**4. Next, you need to edit this variable `reportPeopleEmailList`** 
 
-In this line, you can set daily report time
+You can insert their email addresses of Webex users who will receive a daily report with an aggregated statistic from the bot.
+Add at least one email address.
+
+**5. Set daily report time**
 
 `reportTime = '20:00'`
 
 > If you run the app at 15:14 bot report will be sent at 20:14
 
-**Next, you need to edit this variable `reportPeopleEmailList`** 
 
-You can insert their email addresses of Webex users who will receive a daily report with an aggregated statistic from the bot.
-Add at least one email address.
+**6. Set your time zone in [Dockerfile](Dockerfile)**
 
-Set your time zone in [Dockerfile](Dockerfile)
-by default timezone id Europe/Kyiv
+By default, timezone is Europe/Kyiv
 
-At the end of source code, you can find a scheduler
+**After completing all the above points, we can build a container**
+
+Run docker container on port 56733
 ```
-sched = BackgroundScheduler(daemon=True)
-sched.add_job(sendStatistic, 'interval', minutes=60)
-sched.start()
+bash start.sh
 ```
-When you want to quickly test and debug your changes you can change variable `minutes` from `60` to `1` minute
 
-### Installation
-
-```
-git clone https://github.com/oborys/sport_report_collab
-cd sport_report_collab
-
-# After completing all the above points, we can build a container
-
-# run docker container on port 56733
-sudo bash start.sh
-
-
-```
-http://localhost:56733 or http://ip-address:56733
+Check app availability on your server http://ip-address:56733 or http://localhost:56733
 
 For checking docker container you can use next CLI command
 
 ```
 docker ps
 ```
+![](img/docker_ps.png)
+
 Running the next command you can see information about container logs, also monitor all output information from the Python app. And command like print, logging.debug, logging.info, logging.warning.   
 
 ```
-docker logs [container_id]
+docker logs [CONTAINER ID]
 ```
 If you edit code files or requirements.txt, run next commands to apply changes
 ```
@@ -101,8 +93,24 @@ sudo docker stop sport_report_collab.docker && sudo docker start sport_report_co
 
 Remove the docker container. In case if you got some critical errors, or edit your `Dockerfile` or `uwsgi.ini`
 ```
-docker rm -f [container_id]
+docker rm -f [CONTAINER ID]
 ```
+### Interaction with bot
+
+Find a bot to interact with
+
+Enter the email of bot that you create
+
+![](img/find_bot.png)
+
+
+Interaction with bot
+
+![](img/bot_interaction.png)
+
+Sample of daily report
+
+![](img/daily_report.png)
 
 ### How it's works
 
@@ -118,11 +126,20 @@ and stored in files:
 
 `sentence_unfinished.txt`
 
-You can edit this file and add in there your custom responces.
+You can edit this file and add in there your custom responses.
 
 > Each response should be in a new line. The code detects the Unix system's newlines (\n) symbol as a line delineator.
   
-Main part of code is stored in `app/views.py`
+The main part of the code is stored in `app/views.py`
+
+At the end of source code, you can find a scheduler
+```
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(sendStatistic, 'interval', minutes=60)
+sched.start()
+```
+When you want to quickly test and debug your changes you can change variable `minutes` from `60` to `1` minute
+
 
 ### Image recognition
 

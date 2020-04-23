@@ -8,7 +8,6 @@ import sys
 import subprocess
 import os
 import random
-#from apscheduler.scheduler import Scheduler
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 from datetime import datetime
@@ -26,9 +25,8 @@ webhookUrl = ""
 reportPeopleEmailList = ["email1@webex.com", "email2@webex.com", "email3@webex.com"]
 
 
-
-# Set your custom report time
-reportTime = '01:00'
+# Set your custom report time (24-hour format)
+reportTime = '20:00'
 
 headers = {
     "Accept": "application/json",
@@ -86,7 +84,7 @@ def help_me():
             "`help` - I'll show you what I can do. <br/>" \
             "`+` - played sports <br/>" \
             "`-` - did not play sports <br/>" \
-           "Switch off Markdown Formats (second item in the the panel below) if you can send `+` or `-`"
+           "Switch off Markdown Formats (second item in the panel below) if you can send `+` or `-`"
 
 
 def greetingsPlus():
@@ -166,7 +164,7 @@ def webex_webhook():
             else:
                 # Bot response if users message will not be recognized
                 msg = "Sorry, but I did not understand your request. Type `help` to see what I can do <br/>" \
-                      "Switch off Markdown Formats (second item in the the panel below) if you can send `+` or `-`"
+                      "Switch off Markdown Formats (second item in the panel below) if you can send `+` or `-`"
             if msg != None:
                 send_webex_post("https://api.ciscospark.com/v1/messages",
                                 {"roomId": webhook['data']['roomId'], "markdown": msg})
@@ -205,7 +203,7 @@ def sendStatistic():
                 minusNameSurnameString += (resp["items"][0]["displayName"] + '\n\n')
         print("minusNameSurnameString", minusNameSurnameString)
         # Create daily report message
-        dailyReportText = "# Number of pluses - {} \n {} # Number of minuses - {} \n {}".format(len(plusList), plusNameSurnameString, len(minusList), minusNameSurnameString)
+        dailyReportText = "Date {} \n # Number of pluses - {} \n {} # Number of minuses - {} \n {}".format(str(datetime.now().strftime('%d/%m/%Y')), len(plusList), plusNameSurnameString, len(minusList), minusNameSurnameString)
         for email in reportPeopleEmailList:
             body = {
                 "toPersonEmail": email,
@@ -224,5 +222,5 @@ lastReportDate(get=False, tdate='17/04/2020')
 createWebhook(bearer, webhookUrl)
 
 sched = BackgroundScheduler(daemon=True)
-sched.add_job(sendStatistic, 'interval', minutes=1)
+sched.add_job(sendStatistic, 'interval', minutes=60)
 sched.start()

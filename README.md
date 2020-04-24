@@ -1,4 +1,5 @@
 # Report collab bot
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/oborys/report_collab_bot)
 
 Report collab bot - the app that uses Webex Bot to collect and process answers from users.
 
